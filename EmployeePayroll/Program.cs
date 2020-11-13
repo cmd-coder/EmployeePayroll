@@ -7,6 +7,7 @@ namespace EmployeePayroll
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Employee Payroll Service.");
+            HandleDatabase.RetrieveFromDataBase();
         }
     }
 }
