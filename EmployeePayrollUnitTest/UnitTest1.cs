@@ -9,7 +9,7 @@ namespace EmployeePayrollUnitTest
         [TestMethod]
         public void TestUpdateDatabaseOfHandleDatabaseClassPassNameAndNewBasicPayAndGetUpdatedBasicPay()
         {
-            int actualBasiccPay=HandleDatabase.UpdateDataBase("Name2", 1223);
+            int actualBasiccPay = HandleDatabase.UpdateDataBase("Name2", 1223);
             Assert.AreEqual(1223, actualBasiccPay);
         }
     }
