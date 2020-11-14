@@ -15,8 +15,12 @@ namespace EmployeePayroll
             //HandleDatabase.UpdateDataBase(name, newBasicPay);
 
             //Use Case 5
-            Console.WriteLine("Employee joined between the date range");
-            HandleDatabase.JoinedInDateRange(Convert.ToDateTime("01/01/2000"), Convert.ToDateTime("01/01/2000"));
+            //Console.WriteLine("Employee joined between the date range");
+            //HandleDatabase.JoinedInDateRange(Convert.ToDateTime("01/01/2000"), Convert.ToDateTime("01/01/2000"));
+
+            //Use Case 6
+            Console.WriteLine("Grouping By Gender");
+            HandleDatabase.GroupByGender();
         }
     }
 }
