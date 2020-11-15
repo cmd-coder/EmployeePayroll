@@ -186,7 +186,6 @@ namespace EmployeePayroll
                     {
                         System.Console.WriteLine("No data found");
                     }
-
                 }
             }
             catch (Exception e)
