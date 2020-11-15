@@ -43,14 +43,15 @@ namespace EmployeePayroll
                 DepartmentID=505,
                 EmployeeID=10
             };
+            int basicPay = 7900;
             PayrollDetails payrollDetails = new PayrollDetails()
             {
                 SalaryID=109,
-                BasicPay=7889,
-                Deduction=78,
-                IncomeTax=56,
-                NetPay=7715,
-                Taxable=156
+                BasicPay=basicPay,
+                Deduction=(int)(basicPay*.2),
+                IncomeTax= (int)((basicPay - (int)(basicPay * .2))*.1),
+                NetPay= (int)(basicPay- (int)((basicPay - (int)(basicPay * .2)) * .1)),
+                Taxable= basicPay- (int)(basicPay * .2)
             };
             HandleDatabase.AddAnEmployee(employeeDetails, companyData, department, payrollDetails);
         }
