@@ -172,36 +172,34 @@ namespace EmployeePayroll
         public static int AddAnEmployee(EmployeeDetails employeeDetails, CompanyData companyData, Department department, PayrollDetails payrollDetails)
         {
             int count = 0;
-            string query1 = "insert into payroll_details values(" + payrollDetails.SalaryID + "," + payrollDetails.BasicPay + "," + payrollDetails.Deduction + "," + payrollDetails.Taxable + "," + payrollDetails.IncomeTax + "," + payrollDetails.NetPay + ");";
-            string query2 = "insert into employee_details values('"+employeeDetails.EmployeeID+"','"+employeeDetails.Name+"','"+employeeDetails.StartDate+"','"+employeeDetails.Gender+"','"+employeeDetails.Phone+"','"+employeeDetails.SalaryID+"','"+employeeDetails.Address+"');";
-            string query3 = "insert into company values(" + companyData.DepartmentID + ",'" + companyData.DepartmentName + "');";
-            string query4 = "insert into department values(" + department.DepartmentID + "," + department.EmployeeID + ");";
-
-            count += AddIntoDatabase(query1);
-            count += AddIntoDatabase(query2);
-            count += AddIntoDatabase(query3);
-            count += AddIntoDatabase(query4);
-
-            return count;
-        }
-
-        public static int AddIntoDatabase(string query)
-        {
-            int count = 0;
             SqlConnection sqlConnection = ConnectionSetUp();
+            sqlConnection.Open();
+            SqlTransaction sqlTransaction = sqlConnection.BeginTransaction();
             try
             {
                 using (sqlConnection)
                 {
-                    SqlCommand cmd = new SqlCommand(query, sqlConnection);
-                    sqlConnection.Open();
-                    cmd.ExecuteNonQuery();
-                    count++;
+                    
+                    
+                    string query1 = "insert into payroll_details values(" + payrollDetails.SalaryID + "," + payrollDetails.BasicPay + "," + payrollDetails.Deduction + "," + payrollDetails.Taxable + "," + payrollDetails.IncomeTax + "," + payrollDetails.NetPay + ");";
+                    string query2 = "insert into employee_details values('" + employeeDetails.EmployeeID + "','" + employeeDetails.Name + "','" + employeeDetails.StartDate + "','" + employeeDetails.Gender + "','" + employeeDetails.Phone + "','" + employeeDetails.SalaryID + "','" + employeeDetails.Address + "');";
+                    string query3 = "insert into company values(" + companyData.DepartmentID + ",'" + companyData.DepartmentName + "');";
+                    string query4 = "insert into department values(" + department.DepartmentID + "," + department.EmployeeID + ");";
+                    SqlCommand cmd1 = new SqlCommand(query1, sqlConnection);
+                    SqlCommand cmd2 = new SqlCommand(query2, sqlConnection);
+                    SqlCommand cmd3 = new SqlCommand(query3, sqlConnection);
+                    SqlCommand cmd4 = new SqlCommand(query4, sqlConnection);
+                    count+=cmd1.ExecuteNonQuery();
+                    count += cmd2.ExecuteNonQuery();
+                    count += cmd3.ExecuteNonQuery();
+                    count += cmd4.ExecuteNonQuery();
+                    sqlTransaction.Commit();
                 }
             }
             catch (Exception e)
             {
                 System.Console.WriteLine(e.Message);
+                sqlTransaction.Rollback();
             }
             return count;
         }

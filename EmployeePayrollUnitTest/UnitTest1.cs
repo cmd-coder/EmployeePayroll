@@ -19,27 +19,27 @@ namespace EmployeePayrollUnitTest
         {
             EmployeeDetails employeeDetails = new EmployeeDetails()
             {
-                EmployeeID = 11,
+                EmployeeID = 12,
                 Name = "New Name",
                 StartDate = Convert.ToDateTime("05/04/2020"),
                 Gender = "F",
                 Phone = "7889564512",
-                SalaryID = 110,
+                SalaryID = 115,
                 Address = "New Address"
             };
             CompanyData companyData = new CompanyData()
             {
-                DepartmentID = 506,
-                DepartmentName = "New Department 2"
+                DepartmentID = 510,
+                DepartmentName = "New Department 5"
             };
             Department department = new Department()
             {
-                DepartmentID = 506,
-                EmployeeID = 11
+                DepartmentID = 510,
+                EmployeeID = 12
             };
             PayrollDetails payrollDetails = new PayrollDetails()
             {
-                SalaryID = 110,
+                SalaryID = 115,
                 BasicPay = 7889,
                 Deduction = 78,
                 IncomeTax = 56,
