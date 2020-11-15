@@ -4,12 +4,19 @@ namespace EmployeePayroll
 {
     class Program
     {
+        /// <summary>
+        /// The main function is written to Implement Employee Payroll Diagram
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Employee Payroll Service.");
             ImplementEmployeePayroll();
         }
 
+        /// <summary>
+        /// The function is written to take user input and perform the corresponding action
+        /// </summary>
         public static void ImplementEmployeePayroll()
         {
             Console.WriteLine("Enter 1 to see all the data in the database" +

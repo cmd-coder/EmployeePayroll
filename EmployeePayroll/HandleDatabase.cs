@@ -7,11 +7,17 @@ namespace EmployeePayroll
 {
     public class HandleDatabase
     {
+        /// <summary>
+        /// The function is written to connect to the payroll_service database
+        /// </summary>
         public static SqlConnection ConnectionSetUp()
         {
             return new SqlConnection(@"Data Source=DESKTOP-DKOUJ1R\SQLEXPRESS;Initial Catalog=payroll_service;Integrated Security=True");
         }
 
+        /// <summary>
+        /// The function is written to retrieve data from the database
+        /// </summary>
         public static void RetrieveFromDataBase()
         {
             SqlConnection sqlConnection = ConnectionSetUp();
@@ -46,6 +52,12 @@ namespace EmployeePayroll
             }
         }
 
+        /// <summary>
+        /// The function is written to update the basic salary of the database
+        /// </summary>
+        /// <param name="name">name of the employee whose salary has to be changed</param>
+        /// <param name="newBasicPay">the new basic salary of the concerned employee</param>
+        /// <returns>the updated basic pay of the employee</returns>
         public static int UpdateDataBase(string name, int newBasicPay)
         {
             SqlConnection sqlConnection = ConnectionSetUp();
@@ -86,6 +98,12 @@ namespace EmployeePayroll
             return returnBasicPay;
         }
 
+        /// <summary>
+        /// The function is written to find all the employees who joined between the given date ranges
+        /// </summary>
+        /// <param name="startDate">the starting date of the search</param>
+        /// <param name="endDate">the ending date of the search</param>
+        /// <returns>the number of rows retrieved</returns>
         public static int JoinedInDateRange(DateTime startDate, DateTime endDate)
         {
             int count = 0;
@@ -123,6 +141,9 @@ namespace EmployeePayroll
             return count;
         }
 
+        /// <summary>
+        /// The function is written to find the sum, average, minimum, maximum and count of the basic pay of the male employees
+        /// </summary>
         public static void GroupByGender()
         {
             string query1 = "select sum(basic_pay) from payroll_details p inner join employee_details e on e.salid=p.salid where gender = 'M' group by gender;";
@@ -138,6 +159,11 @@ namespace EmployeePayroll
             PrintData(query5, "Count of basic pay of males: ");
         }
 
+        /// <summary>
+        /// The function is written to execute the query passed to it by the GroupByGender function
+        /// </summary>
+        /// <param name="query">the query to be executed on the databse</param>
+        /// <param name="message">the message to be printed for the user on the console</param>
         public static void PrintData(string query, string message)
         {
             SqlConnection sqlConnection = ConnectionSetUp();
@@ -169,6 +195,13 @@ namespace EmployeePayroll
             }
         }
 
+        /// <summary>
+        /// The function is written to add an employee to the database
+        /// </summary>
+        /// <param name="employeeDetails">an object of type EmployeeDetails that contains the personal data of the employee</param>
+        /// <param name="companyData">an object of the type CompanyData that contains data regarding regarding the company</param>
+        /// <param name="department">an object of type Department that conatins data regarding the employee's department in the company</param>
+        /// <param name="payrollDetails">an object of type PayrollDetails the contains data regaarding the payroll of the employee</param>
         public static int AddAnEmployee(EmployeeDetails employeeDetails, CompanyData companyData, Department department, PayrollDetails payrollDetails)
         {
             int count = 0;
@@ -179,8 +212,6 @@ namespace EmployeePayroll
             {
                 using (sqlConnection)
                 {
-                    
-                    
                     string query1 = "insert into payroll_details values(" + payrollDetails.SalaryID + "," + payrollDetails.BasicPay + "," + payrollDetails.Deduction + "," + payrollDetails.Taxable + "," + payrollDetails.IncomeTax + "," + payrollDetails.NetPay + ");";
                     string query2 = "insert into employee_details values('" + employeeDetails.EmployeeID + "','" + employeeDetails.Name + "','" + employeeDetails.StartDate + "','" + employeeDetails.Gender + "','" + employeeDetails.Phone + "','" + employeeDetails.SalaryID + "','" + employeeDetails.Address + "');";
                     string query3 = "insert into company values(" + companyData.DepartmentID + ",'" + companyData.DepartmentName + "');";
