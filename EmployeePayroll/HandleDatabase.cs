@@ -25,19 +25,19 @@ namespace EmployeePayroll
             {
                 using (sqlConnection)
                 {
-                    string query = "select e.name, e.start_date, e.gender, e.phone, e.address ," +
+                    string query = "select e.empid,e.name, e.start_date, e.gender, e.phone, e.address ," +
                         " c.department_name, p.basic_pay, p.deduction, p.taxable, p.income_tax, " +
                         "p.net_pay from employee_details e inner join payroll_details p on p.salid=e.salid" +
-                        " inner join department d on d.empid=e.empid inner join company c on d.department_id=c.department_id;";
+                        " inner join department d on d.empid=e.empid inner join company c on d.department_id=c.department_id where is_active=1;";
                     SqlCommand cmd = new SqlCommand(query, sqlConnection);
                     sqlConnection.Open();
                     SqlDataReader dr = cmd.ExecuteReader();
                     if (dr.HasRows)
                     {
-                        System.Console.WriteLine("Name -- Start Date -- Gender -- Phone -- Address -- Department Name -- Basic Pay -- Deduction -- Taxable Pay -- Income Tax -- Net Pay");
+                        System.Console.WriteLine("EmployeeID -- Name -- Start Date -- Gender -- Phone -- Address -- Department Name -- Basic Pay -- Deduction -- Taxable Pay -- Income Tax -- Net Pay");
                         while (dr.Read())
                         {
-                            Console.WriteLine(dr.GetString(0) + " -- " + dr.GetDateTime(1) + " -- " + dr.GetString(2) + " -- " + dr.GetString(3) + " -- " + dr.GetString(4) + " -- " + dr.GetString(5) + " -- " + dr.GetInt32(6) + " -- " + dr.GetInt32(7) + " -- " + dr.GetInt32(8) + " -- " + dr.GetInt32(9) + " -- " + dr.GetInt32(10));
+                            Console.WriteLine(dr.GetInt32(0)+" -- "+dr.GetString(1) + " -- " + dr.GetDateTime(2) + " -- " + dr.GetString(3) + " -- " + dr.GetString(4) + " -- " + dr.GetString(5) + " -- " + dr.GetString(6) + " -- " + dr.GetInt32(7) + " -- " + dr.GetInt32(8) + " -- " + dr.GetInt32(9) + " -- " + dr.GetInt32(10) + " -- " + dr.GetInt32(11));
                         }
                     }
                     else
@@ -73,7 +73,7 @@ namespace EmployeePayroll
                     string queryCheck = "select e.name, e.start_date, e.gender, e.phone, e.address ," +
                         " c.department_name, p.basic_pay, p.deduction, p.taxable, p.income_tax, " +
                         "p.net_pay from employee_details e inner join payroll_details p on p.salid=e.salid" +
-                        " inner join department d on d.empid=e.empid inner join company c on d.department_id=c.department_id where e.name='" + name + "';";
+                        " inner join department d on d.empid=e.empid inner join company c on d.department_id=c.department_id where e.name='" + name + "' and e.is_active=1;";
                     cmd = new SqlCommand(queryCheck, sqlConnection);
                     SqlDataReader dr = cmd.ExecuteReader();
                     if (dr.HasRows)
@@ -209,29 +209,46 @@ namespace EmployeePayroll
             SqlTransaction sqlTransaction = sqlConnection.BeginTransaction();
             try
             {
-                using (sqlConnection)
-                {
-                    string query1 = "insert into payroll_details values(" + payrollDetails.SalaryID + "," + payrollDetails.BasicPay + "," + payrollDetails.Deduction + "," + payrollDetails.Taxable + "," + payrollDetails.IncomeTax + "," + payrollDetails.NetPay + ");";
-                    string query2 = "insert into employee_details values('" + employeeDetails.EmployeeID + "','" + employeeDetails.Name + "','" + employeeDetails.StartDate + "','" + employeeDetails.Gender + "','" + employeeDetails.Phone + "','" + employeeDetails.SalaryID + "','" + employeeDetails.Address + "');";
-                    string query3 = "insert into company values(" + companyData.DepartmentID + ",'" + companyData.DepartmentName + "');";
-                    string query4 = "insert into department values(" + department.DepartmentID + "," + department.EmployeeID + ");";
-                    SqlCommand cmd1 = new SqlCommand(query1, sqlConnection);
-                    SqlCommand cmd2 = new SqlCommand(query2, sqlConnection);
-                    SqlCommand cmd3 = new SqlCommand(query3, sqlConnection);
-                    SqlCommand cmd4 = new SqlCommand(query4, sqlConnection);
-                    count+=cmd1.ExecuteNonQuery();
-                    count += cmd2.ExecuteNonQuery();
-                    count += cmd3.ExecuteNonQuery();
-                    count += cmd4.ExecuteNonQuery();
-                    sqlTransaction.Commit();
-                }
+                string query1 = "insert into payroll_details values(" + payrollDetails.SalaryID + "," + payrollDetails.BasicPay + "," + payrollDetails.Deduction + "," + payrollDetails.Taxable + "," + payrollDetails.IncomeTax + "," + payrollDetails.NetPay + ");";
+                string query2 = "insert into employee_details values('" + employeeDetails.EmployeeID + "','" + employeeDetails.Name + "','" + employeeDetails.StartDate + "','" + employeeDetails.Gender + "','" + employeeDetails.Phone + "','" + employeeDetails.SalaryID + "','" + employeeDetails.Address + "'," + employeeDetails.IsActive + ");";
+                string query3 = "insert into company values(" + companyData.DepartmentID + ",'" + companyData.DepartmentName + "');";
+                string query4 = "insert into department values(" + department.DepartmentID + "," + department.EmployeeID + ");";
+                SqlCommand cmd1 = new SqlCommand(query1, sqlConnection, sqlTransaction);
+                SqlCommand cmd2 = new SqlCommand(query2, sqlConnection, sqlTransaction);
+                SqlCommand cmd3 = new SqlCommand(query3, sqlConnection, sqlTransaction);
+                SqlCommand cmd4 = new SqlCommand(query4, sqlConnection, sqlTransaction);
+                count += cmd1.ExecuteNonQuery();
+                count += cmd2.ExecuteNonQuery();
+                count += cmd3.ExecuteNonQuery();
+                count += cmd4.ExecuteNonQuery();
+                sqlTransaction.Commit();
             }
             catch (Exception e)
             {
                 System.Console.WriteLine(e.Message);
                 sqlTransaction.Rollback();
             }
+            sqlConnection.Close();
             return count;
+        }
+
+        public static void RemoveFromDataBase(int employeeID)
+        {
+            SqlConnection sqlConnection = ConnectionSetUp();
+            try
+            {
+                using (sqlConnection)
+                {
+                    string query = "update employee_details set is_active=0 where empid=" + employeeID + ";";
+                    SqlCommand cmd = new SqlCommand(query, sqlConnection);
+                    sqlConnection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e.Message);
+            }
         }
     }
 }

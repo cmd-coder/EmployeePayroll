@@ -21,10 +21,11 @@ namespace EmployeePayroll
         {
             Console.WriteLine("Enter 1 to see all the data in the database" +
                 "\n2 to Update the basic pay of an employee" +
-                "\n 3 to see the employees joine between the data range" +
-                "\n 4 to see data grouped by gender" +
-                "\n 5 to add an employee" +
-                "\n 6 to exit.");
+                "\n3 to see the employees joine between the data range" +
+                "\n4 to see data grouped by gender" +
+                "\n5 to add an employee" +
+                "\n6 to remove an employee from the database" +
+                "\n7 to exit.");
             int option = Convert.ToInt32(Console.ReadLine());
             switch(option)
             {
@@ -48,28 +49,29 @@ namespace EmployeePayroll
                 case 5:
                     EmployeeDetails employeeDetails = new EmployeeDetails()
                     {
-                        EmployeeID = 10,
-                        Name = "New Name",
-                        StartDate = Convert.ToDateTime("05/04/2020"),
+                        EmployeeID = 20,
+                        Name = "New Name 20",
+                        StartDate = Convert.ToDateTime("06/04/2020"),
                         Gender = "F",
                         Phone = "7889564512",
-                        SalaryID = 109,
-                        Address = "New Address"
+                        SalaryID = 120,
+                        Address = "New Address",
+                        IsActive = 0
                     };
                     CompanyData companyData = new CompanyData()
                     {
-                        DepartmentID = 505,
+                        DepartmentID = 515,
                         DepartmentName = "New Department"
                     };
                     Department department = new Department()
                     {
-                        DepartmentID = 505,
-                        EmployeeID = 10
+                        DepartmentID = 515,
+                        EmployeeID = 20
                     };
                     int basicPay = 7900;
                     PayrollDetails payrollDetails = new PayrollDetails()
                     {
-                        SalaryID = 109,
+                        SalaryID = 120,
                         BasicPay = basicPay,
                         Deduction = (int)(basicPay * .2),
                         IncomeTax = (int)((basicPay - (int)(basicPay * .2)) * .1),
@@ -77,6 +79,11 @@ namespace EmployeePayroll
                         Taxable = basicPay - (int)(basicPay * .2)
                     };
                     HandleDatabase.AddAnEmployee(employeeDetails, companyData, department, payrollDetails);
+                    break;
+                case 6:
+                    Console.WriteLine("Enter the employee id of the employee to be remmoved");
+                    int empid = Convert.ToInt32(Console.ReadLine());
+                    HandleDatabase.RemoveFromDataBase(empid);
                     break;
             }
         }

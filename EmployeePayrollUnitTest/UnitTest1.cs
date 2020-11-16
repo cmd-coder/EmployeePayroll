@@ -25,7 +25,8 @@ namespace EmployeePayrollUnitTest
                 Gender = "F",
                 Phone = "7889564512",
                 SalaryID = 115,
-                Address = "New Address"
+                Address = "New Address",
+                IsActive = 1
             };
             CompanyData companyData = new CompanyData()
             {

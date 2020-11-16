@@ -19,5 +19,7 @@ namespace EmployeePayroll
         public int SalaryID { get; set; }
 
         public String Address { get; set; }
+
+        public int IsActive { get; set; }
     }
 }
